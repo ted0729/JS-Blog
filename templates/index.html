@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+        ></script>
+
+        <title>알찬 하루</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            * {
+                font-family: 'Gowun Dodum', sans-serif;
+            }
+            .mytitle {
+                margin-top: 54px;
+                width: 100%;
+                height: 200px;
+                background-image: linear-gradient(
+                        0deg,
+                        rgba(0, 0, 0, 0.5),
+                        rgba(0, 0, 0, 0.5)
+                    ),
+                    url('https://i.pinimg.com/564x/eb/ce/8e/ebce8e834f108043a382c415d70ce9f5.jpg');
+                background-position: center;
+                background-size: cover;
+                color: white;
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+                justify-content: space-around;
+            }
+
+            .center {
+                margin: auto;
+            }
+
+            .mytitle > h2 {
+                margin-top: 10px;
+                margin-left: 10px;
+            }
+
+            .centerText {
+                margin-left: auto;
+            }
+
+            .rightText {
+                margin-left: 5px;
+                margin-right: 10px;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+            }
+
+            a:hover {
+                color: bisque;
+            }
+
+            .mytitle > button {
+                width: 200px;
+                height: 50px;
+
+                background-color: transparent;
+                color: white;
+
+                border-radius: 50px;
+                border: 1px solid white;
+
+                margin-top: 10px;
+            }
+
+            .mytitle > button:hover {
+                border: 2px solid white;
+            }
+
+            .mycomment {
+                color: gray;
+            }
+
+            .mycards {
+                margin: 20px auto 0px auto;
+                width: 95%;
+                max-width: 1200px;
+            }
+
+            .mypost {
+                width: 95%;
+                max-width: 500px;
+                margin: 20px auto 0px auto;
+                padding: 20px;
+                box-shadow: 0px 0px 3px 0px gray;
+
+                display: none;
+            }
+
+            .mybtns {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                margin-top: 20px;
+            }
+            .mybtns > button {
+                margin-right: 10px;
+            }
+
+            .pointer {
+                border: none;
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                listing();
+            });
+
+            function listing() {
+                fetch('/movie')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data);
+                        alert(data['msg']);
+                    });
+            }
+
+            function posting() {
+                let formData = new FormData();
+                formData.append('sample_give', '샘플데이터');
+
+                fetch('/movie', { method: 'POST', body: formData })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data);
+                        alert(data['msg']);
+                    });
+            }
+
+            function open_box() {
+                $('#post-box').show();
+            }
+            function close_box() {
+                $('#post-box').hide();
+            }
+
+            $(document).ready(function () {
+                fetch('https://api.adviceslip.com/advice')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data.slip.advice);
+                        let motivation = data.slip.advice;
+                        $('#motivation').text(motivation);
+                    });
+            });
+            function movePage() {
+                location.href = '이동 할 페이지.html';
+            }
+        </script>
+    </head>
+
+    <body>
+        <header class="nav-down">{% include 'header.html' %}</header>
+        <div class="mytitle">
+            <div class="center">
+                &nbsp; 오늘의 동기부여
+                <hr />
+                &nbsp; <span id="motivation">오늘도 화이팅</span>
+            </div>
+        </div>
+        <div class="mycards">
+            <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+                <section class="pointer" onclick="movePage()">
+                    <div class="col">
+                        <div class="card h-100">
+                            <img
+                                src="https://i.pinimg.com/564x/b7/f0/db/b7f0db1455d5a1fcfdb41ef6a13822e2.jpg"
+                                class="card-img-top"
+                            />
+                            <div class="card-body">
+                                <h5 class="card-title">제목</h5>
+                                <p class="card-text">내용</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col">
+                    <div class="card h-100">
+                        <img
+                            src="https://i.pinimg.com/564x/b7/f0/db/b7f0db1455d5a1fcfdb41ef6a13822e2.jpg"
+                            class="card-img-top"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title">제목</h5>
+                            <p class="card-text">내용</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img
+                            src="https://i.pinimg.com/564x/b7/f0/db/b7f0db1455d5a1fcfdb41ef6a13822e2.jpg"
+                            class="card-img-top"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title">제목</h5>
+                            <p class="card-text">내용</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img
+                            src="https://i.pinimg.com/564x/b7/f0/db/b7f0db1455d5a1fcfdb41ef6a13822e2.jpg"
+                            class="card-img-top"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title">제목</h5>
+                            <p class="card-text">내용</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
