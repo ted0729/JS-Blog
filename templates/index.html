@@ -130,6 +130,11 @@
                 border: none;
                 cursor: pointer;
             }
+
+            #no_btn {
+                margin-right: 10px;
+                margin-bottom: 5px;
+            }
         </style>
         <script>
             $(document).ready(function () {
@@ -140,10 +145,37 @@
                 fetch('/movie')
                     .then((res) => res.json())
                     .then((data) => {
-                        console.log(data);
-                        alert(data['msg']);
+                        //console.log(data);
+                        //alert(data['msg']);
+                        let rows = data['result']
+                        $('#cards-box').empty()
+                        rows.forEach((a) => {
+                            let no = a['no']
+                            let title = a['title']
+                            let imgurl = a['imgurl']
+                            let detail = a['detail']
+
+                            let temp_html = `<div class="col">
+                                                <div class="card h-100">
+                                                    <img
+                                                        src="${imgurl}"
+                                                        class="card-img-top"
+                                                    />
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${title}</h5>
+                                                        <p class="card-text">${detail}</p>
+                                                    </div>
+                                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" id="no">
+                                                        <a href="/list_detail/${no}" class="btn btn-primary" id="no_btn">상세보기</a>
+                                                    </div>
+                                                </div>
+                                            </div>`
+
+                            $('#cards-box').append(temp_html)
+                        })
                     });
             }
+            
 
             function posting() {
                 let formData = new FormData();
