@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        .rogo {
+            font-size: 40px;
+            color: green;
+        }
+
+        .mytitle {
+            color: green;
+            height: 250px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 200px;
+        }
+
+        .info {
+            margin-top: 50px;
+        }
+
+        .space {
+            width: 60px;
+            height: auto;
+            display: inline-block;
+        }
+
+        .divBtn {
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mb-3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function modify_myinfo() {
+            let nickname = $("#nickname").val();
+            let pwd = $("#pwd").val();
+            let repwd = $("#repwd").val();
+
+            if (pwd !== repwd) {
+                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                return;
+            }       
+
+            let formData = new FormData();
+            formData.append("nickname_give", nickname);
+            formData.append("pwd_give", pwd);
+
+            fetch('/mypage', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                alert(data["msg"]);
+
+                window.location.reload();
+            });
+        }
+
+        function delete_myaccount() {
+            if (confirm("정말로 회원 탈퇴하시겠습니까?")) {
+                fetch('/mypage/delete', { method: "POST" }).then((res) => res.json()).then((data) => {
+                    alert(data["msg"]);
+                    $("#mypage-list").empty()
+                    window.location.href = "/";
+                });
+            }
+        }
+        $(document).ready(function () {
+            show_mypage();
+        });
+
+        function show_mypage() {
+            fetch('/mypage/show')
+                .then((res) => res.json())
+                .then((data) => {
+                    let rows = JSON.parse(data['result']);
+
+                    rows.forEach((a) => {
+                        let nickname = a['nickname'];
+                        let pwd = as['pwd'];
+
+                        let temp_html = `
+                                            <div class="mb-3">
+                                                <label for="id" class="form-label">아이디 :
+                                                    <input type="text" class="form-control" id="id" disabled value="aaa">
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nickname" class="form-label">닉네임 :
+                                                    <input type="nickname" class="form-control" id="nickname" name="nickname" value="${nickname}" required>
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="pwd" class="form-label">비밀번호 :
+                                                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="영문자+숫자+특수문자 조합"
+                                                        required value="${pwd}">
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirm_pwd" class="form-label">비밀번호 확인 :
+                                                    <input type="password" class="form-control" id="repwd" name="repwd" required>
+                                                </label>
+                                            </div>
+                                        `
+                                        $("#mypage-list").append(temp_html);
+                    });
+                });
+        }
+    </script>
+</head>
+
+<body>
+    <header class="nav-down">{% include 'header.html' %}</header>
+
+    <div class="mytitle">
+        <h1>마이페이지</h1>
+        <div class="info">
+            <div class="row g-3" id="mypage-list">
+                <div class="mb-3">
+                    <label for="id" class="form-label">아이디 :
+                        <input type="text" class="form-control" id="id" disabled value="aaa"></label>
+                </div>
+                <div class="mb-3">
+                    <label for="nickname" class="form-label">닉네임 :
+                        <input type="nickname" class="form-control" id="nickname" name="nickname" required></label>
+                </div>
+                <div class="mb-3">
+                    <label for="pwd" class="form-label">비밀번호 :
+                        <input type="password" class="form-control" id="pwd" name="pwd" placeholder="영문자+숫자+특수문자 조합"
+                            required></label>
+                </div>
+                <div class="mb-3">
+                    <label for="confirm_pwd" class="form-label">비밀번호 확인 :
+                        <input type="password" class="form-control" id="repwd" name="repwd" required></label>
+                </div>
+            </div>
+            <div class="divBtn">
+                <button class="btn btn-success" type="button" onclick="modify_myinfo()">변경 저장</button>
+                <div class="space"></div>
+                <button class="btn btn-danger" type="button" onclick="delete_myaccount()">회원 탈퇴</button>
+            </div>
+        </div>
+</body>
+
+</html>
