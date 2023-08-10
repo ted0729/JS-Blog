@@ -1,14 +1,22 @@
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <style>
         /* 로그인 버튼 */
-        .loginBtn {border:none;background:none;color: #fff}
-        .loginBtn:hover {color:bisque}
+        .loginBtn, .logoutBtn {border:none;background:none;color: #fff}
+        .loginBtn:hover, .logoutBtn:hover {color:bisque;background: none}
 
         /* 모달창 오버레이 */
         .modal {background-color: rgba(0, 0, 0, 0.5);}
     </style>
 
     <script>
+        // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+        function logout(){
+            $.removeCookie('mytoken');
+            alert('로그아웃! 다음에 또 만나요!')
+            location.reload();
+        }
+
         // 로그인 모달창 확인
         function login() {
             var login_id = $('.login_id');   // ID
@@ -26,6 +34,29 @@
                 login_pw.focus();
                 return false;
             }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/login",
+                data: {
+                    id_give: login_id.val(),
+                    pw_give: login_pw.val()
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+                        // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+                        $.cookie('mytoken', response['token']);
+                        alert('로그인 완료!')
+                        closeModal();
+                        $('.loginBtn').hide();
+                        $('.logoutBtn').show();
+                    } else {
+                        // 로그인이 안되면 에러메시지를 띄웁니다.
+                        alert(response['msg'])
+                    }
+                }
+            })
         }
 
         // 회원가입 모달창 확인
@@ -91,8 +122,26 @@
                 join_nickName.focus();
                 return false;
             }
+            
+            $.ajax({
+                type: "POST",
+                url: "/api/register",
+                data: {
+                    id_give: join_id.val(),
+                    pw_give: join_pw1.val(),
+                    nickname_give: join_nickName.val()
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('회원가입이 완료되었습니다.')
+                        location.reload();
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+            })
         }
-
+        
         // 로그인 모달창 - show
         function loginModal() {
             $('#login_modal').show();
@@ -144,7 +193,7 @@
                 <button type="submit" onclick="go_register()" >회원가입</button> -->
                 <a class="centerText" href="/board">글작성 |</a>
                 <button class="rightText loginBtn" onclick="loginModal()">로그인</button>
-                <!-- <button type="button" class="btn btn-primary" onclick="logout()">로그아웃</button> -->
+                <button class="rightText logoutBtn" onclick="logout()" style="display:none">로그아웃</button>
             </div>
         </div>
     </nav>
@@ -212,16 +261,16 @@
                 <!-- 모달 컨텐츠 -->
                 <div class="modal-body p-5 pt-0">
                     <form class="mb-5 needs-validation" novalidate>
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="form-floating flex-grow-1 me-2">
-                                <input type="text" name="user_id" class="form-control rounded-3 join_id" id="floatingInput" placeholder="아이디" required>
-                                <label for="floatingInput">아이디</label>
-                            </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="user_id" class="form-control rounded-3 join_id" id="floatingInput" placeholder="아이디" required>
+                            <label for="floatingInput">아이디</label>
+                        </div>
+                        <!-- <div class="d-flex align-items-center mb-3">
                             <div>
                                 <button type="button"
-                                    class="double-check btn btn-lg rounded-3 form-control btn-success">중복 확인</button>
+                                    class="double-check btn btn-lg rounded-3 form-control btn-success" onclick="id_overlap_check()">중복 확인</button>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-floating mb-3">
                             <input type="password" name="user_pw" class="form-control rounded-3 join_pw1" id="floatingPassword" placeholder="비밀번호" required>
