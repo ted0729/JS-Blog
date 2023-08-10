@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>알찬 하루</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mypost {
+            margin: 80px auto 0px auto;
+            width: 600px;
+            height: 200px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .centerText {
+            margin-left: auto;
+        }
+
+        .rightText {
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        a:hover {
+            color: bisque;
+        }
+        body {
+            padding-top: 70px;
+            padding-bottom: 30px;
+        }
+
+        .board_title {
+            font-weight : 700;
+            font-size : 22pt;
+            margin : 10pt;
+        }
+
+        .board_info_box {
+            color : #6B6B6B;
+            margin : 10pt;
+        }
+
+        .board_author {
+            font-size : 10pt;
+            margin-right : 10pt;
+            text-align : left;
+        }
+
+        .board_date {
+            font-size : 10pt;
+        }
+
+        .board_content {
+            color : #444343;
+            font-size : 12pt;
+            margin : 10pt;
+        }
+
+        .board_tag {
+            font-size : 11pt;
+            margin : 10pt;
+            padding-bottom : 10pt;
+        }
+    </style>
+    <script>
+        function update() {
+            window.location.href = '/board/update'
+        }
+        function delete_doc() {
+            if (window.confirm("정말 색상을 변경하시겠습니까?")) {
+                let no = $('#doc_no').val();
+            
+                let formData = new FormData();
+                formData.append("no_give", no);
+                
+                fetch('/board/del', {method: "POST",body: formData,}).then((response) => response.json()).then((data) => {
+                    alert(data["msg"]);
+                    location.href = '/';
+                });
+            } else {
+                window.location.reload();
+            }
+            
+        }
+    </script>
+</head>
+
+<body>
+    <header>{% include 'header.html' %}</header>
+    <div class="mypost" id="post-box">
+        <form>
+            <div class="container" role="main">
+                <h2>상세보기</h2>
+                <div class="bg-white rounded shadow-sm">
+                    <div class="board_title">
+                        <input type="hidden" id="doc_no" value="{{no}}">
+                        <input type="text" readonly class="form-control-plaintext" id="title" value="{{title}}">
+                    </div>
+                    <div class="board_info_box">
+                        <span class="board_author">
+                            <pre>{{detail}}</pre>
+                        </span>
+                    </div>
+                </div>
+                <div style="margin-top : 20px">
+                    <a href="/board/update/{{no}}" class="btn btn-success" id="no_btn">수정</a>
+                    <button type="button" class="btn btn-success" id="btnDelete" onclick="delete_doc()">삭제</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
