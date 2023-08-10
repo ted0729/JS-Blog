@@ -1,43 +1,118 @@
+<head>
+    <style>
+        /* 로그인 버튼 */
+        .loginBtn {border:none;background:none;color: #fff}
+        .loginBtn:hover {color:bisque}
+
+        /* 모달창 오버레이 */
+        .modal {background-color: rgba(0, 0, 0, 0.5);}
+    </style>
+
+    <script>
+        // 로그인
+        function login() {
+            var login_id = $('.login_id');   // ID
+            var login_pw = $('.login_pw');   // PW
+
+            // ID, PW 미입력 방지 및 미입력란 focus
+            if (login_id.val() == '') {
+                alert('아이디를 입력해 주세요.');
+                login_id.focus();
+                return false;
+            }
+
+            if (login_pw.val() == '') {
+                alert('비밀번호를 입력해 주세요.');
+                login_pw.focus();
+                return false;
+            }
+        }
+
+        // 로그인 모달창 - show
+        function loginModal() {
+            $('.modal').show();
+        }
+    
+        // 로그인 모달창 - hide
+        function closeModal() {
+            $('#login_modal').hide();
+        }
+    </script>
+</head>
+
 <header data-bs-theme="dark">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-            <lord-icon
-                src="https://cdn.lordicon.com/fihkmkwt.json"
-                trigger="loop"
-                colors="primary:#121331,secondary:#4bb3fd"
-                scale="60"
-                state="hover-jump-spin"
-                style="width: 30px; height: 35px; position: relative"
-            >
+            <lord-icon src="https://cdn.lordicon.com/fihkmkwt.json" trigger="loop"
+                colors="primary:#121331,secondary:#4bb3fd" scale="60" state="hover-jump-spin"
+                style="width: 30px; height: 35px; position: relative">
             </lord-icon>
             <a class="navbar-brand p-1" href="#">알찬하루</a>
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarCollapse"
-                aria-controls="navbarCollapse"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a
-                            class="nav-link active"
-                            aria-current="page"
-                            href="/"
-                        ></a>
+                        <a class="nav-link active" aria-current="page" href="/"></a>
                     </li>
                 </ul>
                 <!-- <button type="submit" onclick="go_login()" >로그인</button>
                 <button type="submit" onclick="go_register()" >회원가입</button> -->
                 <a class="centerText" href="글 작성">글작성 |</a>
-                <a class="rightText" href="로그인">로그인</a>
+                <button class="rightText loginBtn" onclick="loginModal()">로그인</button>
                 <!-- <button type="button" class="btn btn-primary" onclick="logout()">로그아웃</button> -->
             </div>
         </div>
     </nav>
 </header>
+
+<body>
+    <!-- JSY: header에 로그인 모달창 추가 -->
+    <div class="modal modal-sheet position-absolute bg-body-secondary p-4 py-md-5" id="login_modal">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 shadow">
+                <!-- 모달 헤더 -->
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h2 class="fw-bold mb-0 fs-2">로그인</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+                </div>
+                <!-- // 모달 헤더 -->
+
+                <!-- 모달 컨텐츠 -->
+                <div class="modal-body p-5 pt-0">
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="user_id" class="form-control rounded-3 login_id" id="floatingInput"
+                                placeholder="아이디">
+                            <label for="floatingInput">아이디</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" name="user_pw" class="form-control rounded-3 login_pw"
+                                id="floatingPassword" placeholder="비밀번호">
+                            <label for="floatingPassword">비밀번호</label>
+                        </div>
+                    </form>
+                    <div class="button-login-box mt-4">
+                        <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-success"
+                            onclick="login()">로그인</button>
+                    </div>
+
+                    <hr class="my-4"> <!-- 구분선 -->
+
+                    <div>
+                        <p>앗! 알찬하루의 회원이 아니신가요?</p>
+                        <button onclick="location.href='join.html'"
+                            class="w-100 py-2 mb-2 btn btn-outline-warning rounded-3" type="submit">
+                            <!--JSY: 노란색이 잘 안보인다면? 파란색으로 바꿀까요? btn-outline-primary-->
+                            회원가입하고 알찬 하루 보내기☀️
+                        </button>
+                    </div>
+                </div>
+                <!-- // 모달 컨텐츠 -->
+            </div>
+        </div>
+    </div>
+    <!-- // 로그인 모달창 -->
+</body>
