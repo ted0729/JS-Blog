@@ -147,13 +147,13 @@
                     .then((data) => {
                         //console.log(data);
                         //alert(data['msg']);
-                        let rows = data['result']
-                        $('#cards-box').empty()
+                        let rows = data['result'];
+                        $('#cards-box').empty();
                         rows.forEach((a) => {
-                            let no = a['no']
-                            let title = a['title']
-                            let imgurl = a['imgurl']
-                            let detail = a['detail']
+                            let no = a['no'];
+                            let title = a['title'];
+                            let imgurl = a['imgurl'];
+                            let detail = a['detail'];
 
                             let temp_html = `<div class="col">
                                                 <div class="card h-100">
@@ -169,19 +169,26 @@
                                                         <a href="/list_detail/${no}" class="btn btn-primary" id="no_btn">상세보기</a>
                                                     </div>
                                                 </div>
-                                            </div>`
+                                            </div>`;
 
-                            $('#cards-box').append(temp_html)
-                        })
+                            $('#cards-box').append(temp_html);
+                        });
                     });
             }
-            
 
             function posting() {
-                let formData = new FormData();
-                formData.append('sample_give', '샘플데이터');
+                let no = $('#no').val();
+                let title = $('#title').val();
+                let imgurl = $('#imgurl').val();
+                let detail = $('#detail').val();
 
-                fetch('/movie', { method: 'POST', body: formData })
+                let formData = new FormData();
+                formData.append('no_give', no);
+                formData.append('title_give', title);
+                formData.append('imgurl_give', imgurl);
+                formData.append('detail_give', detail);
+
+                fetch('/board', { method: 'POST', body: formData })
                     .then((res) => res.json())
                     .then((data) => {
                         console.log(data);
@@ -191,9 +198,6 @@
 
             function open_box() {
                 $('#post-box').show();
-            }
-            function close_box() {
-                $('#post-box').hide();
             }
 
             $(document).ready(function () {
@@ -212,7 +216,9 @@
     </head>
 
     <body>
-        <header class="nav-down">{% include 'header.html' %}</header>
+        <header class="nav-down">
+            {% with nickName=nickname %} {%include 'header.html'%} {% endwith %}
+        </header>
         <div class="mytitle">
             <div class="center">
                 &nbsp; 오늘의 동기부여

@@ -2,25 +2,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <style>
         /* 로그인 버튼 */
-        .loginBtn, .logoutBtn {border:none;background:none;color: #fff}
-        .loginBtn:hover, .logoutBtn:hover {color:bisque;background: none}
+        #name {
+            border: none;
+            background: none;
+            color: tan;
+        }
+        .loginBtn,
+        .logoutBtn {
+            border: none;
+            background: none;
+            color: #fff;
+        }
+        .loginBtn:hover,
+        .logoutBtn:hover {
+            color: bisque;
+            background: none;
+        }
 
         /* 모달창 오버레이 */
-        .modal {background-color: rgba(0, 0, 0, 0.5);}
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
     </style>
 
     <script>
         // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
-        function logout(){
+        function logout() {
             $.removeCookie('mytoken');
-            alert('로그아웃! 다음에 또 만나요!')
+            alert('로그아웃! 다음에 또 만나요!');
             location.reload();
         }
 
         // 로그인 모달창 확인
         function login() {
-            var login_id = $('.login_id');   // ID
-            var login_pw = $('.login_pw');   // PW
+            var login_id = $('.login_id'); // ID
+            var login_pw = $('.login_pw'); // PW
 
             // ID, PW 미입력 방지 및 미입력란 focus
             if (login_id.val() == '') {
@@ -36,35 +52,34 @@
             }
 
             $.ajax({
-                type: "POST",
-                url: "/api/login",
+                type: 'POST',
+                url: '/api/login',
                 data: {
                     id_give: login_id.val(),
-                    pw_give: login_pw.val()
+                    pw_give: login_pw.val(),
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
                         // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
                         $.cookie('mytoken', response['token']);
-                        alert('로그인 완료!')
+                        alert('로그인 완료!');
                         closeModal();
-                        $('.loginBtn').hide();
-                        $('.logoutBtn').show();
+                        location.reload();
                     } else {
                         // 로그인이 안되면 에러메시지를 띄웁니다.
-                        alert(response['msg'])
+                        alert(response['msg']);
                     }
-                }
-            })
+                },
+            });
         }
 
         // 회원가입 모달창 확인
-        function join(){
-            var join_id = $('.join_id');         // 회원가입 ID
-            var join_pw1 = $('.join_pw1');       // 회원가입 PW
-            var join_pw2 = $('.join_pw2');       // 회원가입 확인 PW
-            var join_nickName = $('.nickName');  // 회원가입 닉네임
+        function join() {
+            var join_id = $('.join_id'); // 회원가입 ID
+            var join_pw1 = $('.join_pw1'); // 회원가입 PW
+            var join_pw2 = $('.join_pw2'); // 회원가입 확인 PW
+            var join_nickName = $('.nickName'); // 회원가입 닉네임
 
             // ID, PW 미입력 방지 / 미입력란 focus / 비밀번호, 비밀번호 확인란 일치 여부 확인
             if (join_id.val() == '') {
@@ -77,7 +92,9 @@
             var idCheck = /^(?=.*[a-zA-Z])(?=.*[0-9]).{5,10}$/;
 
             if (!idCheck.test(join_id.val())) {
-                alert('아이디는 영문 + 숫자 조합으로 5 ~ 10자리 사용해야 합니다.');
+                alert(
+                    '아이디는 영문 + 숫자 조합으로 5 ~ 10자리 사용해야 합니다.'
+                );
                 join_id.focus();
                 return false;
             }
@@ -89,22 +106,27 @@
             }
 
             // 비밀번호: 영문자+숫자+특수 조합(8~15자리 입력) 정규식
-            var pwdCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+            var pwdCheck =
+                /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
             if (!pwdCheck.test(join_pw1.val())) {
-                alert('비밀번호는 영문 + 숫자 + 특수문자 조합으로 8 ~ 15자리 사용해야 합니다.');
+                alert(
+                    '비밀번호는 영문 + 숫자 + 특수문자 조합으로 8 ~ 15자리 사용해야 합니다.'
+                );
                 join_pw1.focus();
                 return false;
             }
 
-            if( join_pw2.val() == '') {
+            if (join_pw2.val() == '') {
                 alert('비밀번호 확인란을 입력해 주세요.');
                 join_pw2.focus();
                 return false;
             }
 
             if (join_pw1.val() != join_pw2.val()) {
-                alert('비밀번호와 비밀번호 확인에 입력된 내용이 동일하지 않습니다.');
+                alert(
+                    '비밀번호와 비밀번호 확인에 입력된 내용이 동일하지 않습니다.'
+                );
                 return false;
             }
 
@@ -118,30 +140,32 @@
             var nickNameCheck = /^[가-힣]{1,}\s?[가-힣]{1,}$/;
 
             if (!nickNameCheck.test(join_nickName.val())) {
-                alert('한글(자음 및 띄어쓰기 불가) 최소 2글자 이상 사용해야 합니다.');
+                alert(
+                    '한글(자음 및 띄어쓰기 불가) 최소 2글자 이상 사용해야 합니다.'
+                );
                 join_nickName.focus();
                 return false;
             }
-            
+
             $.ajax({
-                type: "POST",
-                url: "/api/register",
+                type: 'POST',
+                url: '/api/register',
                 data: {
                     id_give: join_id.val(),
                     pw_give: join_pw1.val(),
-                    nickname_give: join_nickName.val()
+                    nickname_give: join_nickName.val(),
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert('회원가입이 완료되었습니다.')
+                        alert('회원가입이 완료되었습니다.');
                         location.reload();
                     } else {
-                        alert(response['msg'])
+                        alert(response['msg']);
                     }
-                }
-            })
+                },
+            });
         }
-        
+
         // 로그인 모달창 - show
         function loginModal() {
             $('#login_modal').show();
@@ -153,23 +177,32 @@
             $('#join_modal').show();
             $('#login_modal').hide();
         }
-    
+
         // 모달창 - hide & form 내용들 모두 reset
         function closeModal() {
-            $('form').each(function() {
+            $('form').each(function () {
                 this.reset();
             });
             $('.modal').hide();
         }
+        // 닉네임 클릭 시 mypage.html로 이동
+        // function moveMypage() {
+        //     window.location.href = '/mypage';
+        // }
     </script>
 </head>
 
 <header data-bs-theme="dark">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-            <lord-icon src="https://cdn.lordicon.com/fihkmkwt.json" trigger="loop"
-                colors="primary:#121331,secondary:#4bb3fd" scale="60" state="hover-jump-spin"
-                style="width: 30px; height: 35px; position: relative">
+            <lord-icon
+                src="https://cdn.lordicon.com/fihkmkwt.json"
+                trigger="loop"
+                colors="primary:#121331,secondary:#4bb3fd"
+                scale="60"
+                state="hover-jump-spin"
+                style="width: 30px; height: 35px; position: relative"
+            >
             </lord-icon>
             <a class="navbar-brand p-1" href="/">알찬하루</a>
             <button
@@ -186,14 +219,34 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/"></a>
+                        <a
+                            class="nav-link active"
+                            aria-current="page"
+                            href="/"
+                        ></a>
                     </li>
                 </ul>
                 <!-- <button type="submit" onclick="go_login()" >로그인</button>
                 <button type="submit" onclick="go_register()" >회원가입</button> -->
                 <a class="centerText" href="/board">글작성 |</a>
-                <button class="rightText loginBtn" onclick="loginModal()">로그인</button>
-                <button class="rightText logoutBtn" onclick="logout()" style="display:none">로그아웃</button>
+
+                {%if nickName != null %}
+                <a
+                    class="rightText name"
+                    href="#"
+                    onclick="location.href='mypage'"
+                    id="name"
+                >
+                    {{nickName}}
+                </a>
+                <button class="rightText logoutBtn" onclick="logout()">
+                    로그아웃
+                </button>
+                {% else %}
+                <button class="rightText loginBtn" onclick="loginModal()">
+                    로그인
+                </button>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -201,13 +254,23 @@
 
 <body>
     <!-- JSY: header에 로그인 모달창 추가 -->
-    <div class="modal modal-sheet position-absolute bg-body-secondary p-4 py-md-5" id="login_modal" style="display:none">
+    <div
+        class="modal modal-sheet position-absolute bg-body-secondary p-4 py-md-5"
+        id="login_modal"
+        style="display: none"
+    >
         <div class="modal-dialog">
             <div class="modal-content rounded-4 shadow">
                 <!-- 모달 헤더 -->
                 <div class="modal-header p-5 pb-4 border-bottom-0">
                     <h2 class="fw-bold mb-0 fs-2">로그인</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        onclick="closeModal()"
+                    ></button>
                 </div>
                 <!-- // 모달 헤더 -->
 
@@ -215,27 +278,46 @@
                 <div class="modal-body p-5 pt-0">
                     <form>
                         <div class="form-floating mb-3">
-                            <input type="text" name="user_id" class="form-control rounded-3 login_id" id="floatingInput"
-                                placeholder="아이디">
+                            <input
+                                type="text"
+                                name="user_id"
+                                class="form-control rounded-3 login_id"
+                                id="floatingInput"
+                                placeholder="아이디"
+                            />
                             <label for="floatingInput">아이디</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" name="user_pw" class="form-control rounded-3 login_pw"
-                                id="floatingPassword" placeholder="비밀번호">
+                            <input
+                                type="password"
+                                name="user_pw"
+                                class="form-control rounded-3 login_pw"
+                                id="floatingPassword"
+                                placeholder="비밀번호"
+                            />
                             <label for="floatingPassword">비밀번호</label>
                         </div>
                     </form>
                     <div class="button-login-box mt-4">
-                        <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-success"
-                            onclick="login()">로그인</button>
+                        <button
+                            type="button"
+                            class="w-100 mb-2 btn btn-lg rounded-3 btn-success"
+                            onclick="login()"
+                        >
+                            로그인
+                        </button>
                     </div>
 
-                    <hr class="my-4"> <!-- 구분선 -->
+                    <hr class="my-4" />
+                    <!-- 구분선 -->
 
                     <div>
                         <p>앗! 알찬하루의 회원이 아니신가요?</p>
-                        <button onclick="joinModal()"
-                            class="w-100 py-2 mb-2 btn btn-outline-warning rounded-3" type="submit">
+                        <button
+                            onclick="joinModal()"
+                            class="w-100 py-2 mb-2 btn btn-outline-warning rounded-3"
+                            type="submit"
+                        >
                             <!--JSY: 노란색이 잘 안보인다면? 파란색으로 바꿀까요? btn-outline-primary-->
                             회원가입하고 알찬 하루 보내기☀️
                         </button>
@@ -248,13 +330,23 @@
     <!-- // 로그인 모달창 -->
 
     <!-- JSY: header에 회원가입 모달창 추가 -->
-    <div class="modal modal-sheet position-absolute bg-body-secondary p-4 py-md-5" id="join_modal" style="display:none">
+    <div
+        class="modal modal-sheet position-absolute bg-body-secondary p-4 py-md-5"
+        id="join_modal"
+        style="display: none"
+    >
         <div class="modal-dialog">
             <div class="modal-content rounded-4 shadow">
                 <!-- 모달 헤더 -->
                 <div class="modal-header p-5 pb-4 border-bottom-0">
                     <h2 class="fw-bold mb-0 fs-2">회원 가입</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        onclick="closeModal()"
+                    ></button>
                 </div>
                 <!-- // 모달 헤더 -->
 
@@ -262,7 +354,14 @@
                 <div class="modal-body p-5 pt-0">
                     <form class="mb-5 needs-validation" novalidate>
                         <div class="form-floating mb-3">
-                            <input type="text" name="user_id" class="form-control rounded-3 join_id" id="floatingInput" placeholder="아이디" required>
+                            <input
+                                type="text"
+                                name="user_id"
+                                class="form-control rounded-3 join_id"
+                                id="floatingInput"
+                                placeholder="아이디"
+                                required
+                            />
                             <label for="floatingInput">아이디</label>
                         </div>
                         <!-- <div class="d-flex align-items-center mb-3">
@@ -273,34 +372,70 @@
                         </div> -->
 
                         <div class="form-floating mb-3">
-                            <input type="password" name="user_pw" class="form-control rounded-3 join_pw1" id="floatingPassword" placeholder="비밀번호" required>
+                            <input
+                                type="password"
+                                name="user_pw"
+                                class="form-control rounded-3 join_pw1"
+                                id="floatingPassword"
+                                placeholder="비밀번호"
+                                required
+                            />
                             <label for="floatingPassword">비밀번호</label>
                         </div>
 
-                        <div class="form-floating mb-3"> <!-- JSY : is-invalid로 비밀번호 서로 매칭 안되면 class 추가-->
-                            <input type="password" name="user_pw" class="form-control rounded-3 join_pw2" id="floatingPassword" placeholder="비밀번호 확인" required>
+                        <div class="form-floating mb-3">
+                            <!-- JSY : is-invalid로 비밀번호 서로 매칭 안되면 class 추가-->
+                            <input
+                                type="password"
+                                name="user_pw"
+                                class="form-control rounded-3 join_pw2"
+                                id="floatingPassword"
+                                placeholder="비밀번호 확인"
+                                required
+                            />
                             <label for="floatingPassword">비밀번호 확인</label>
                         </div>
                     </form>
 
-                    <hr class="my-4"> <!-- 구분선 -->
+                    <hr class="my-4" />
+                    <!-- 구분선 -->
 
-                    <p class="text-start">알찬하루에서 사용하실 닉네임을 알려주세요!</p>
+                    <p class="text-start">
+                        알찬하루에서 사용하실 닉네임을 알려주세요!
+                    </p>
                     <form>
                         <div class="form-floating mb-3">
-                            <input type="text" name="user_nickName" class="form-control rounded-3 nickName" id="floatingPassword" placeholder="닉네임" required>
+                            <input
+                                type="text"
+                                name="user_nickName"
+                                class="form-control rounded-3 nickName"
+                                id="floatingPassword"
+                                placeholder="닉네임"
+                                required
+                            />
                             <label for="user_nickName">닉네임</label>
                         </div>
                     </form>
 
                     <div class="button-login-box mt-4">
-                        <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-success" onclick="join()">회원 가입 완료!</button>
+                        <button
+                            type="button"
+                            class="w-100 mb-2 btn btn-lg rounded-3 btn-success"
+                            onclick="join()"
+                        >
+                            회원 가입 완료!
+                        </button>
                     </div>
 
                     <div class="button-login-box mt-4">
                         <p>이미 회원이시면?</p>
-                        <button type="button" onclick="loginModal()"
-                            class="w-100 py-2 mb-2 btn btn-outline-warning rounded-3">로그인 하기</button>
+                        <button
+                            type="button"
+                            onclick="loginModal()"
+                            class="w-100 py-2 mb-2 btn btn-outline-warning rounded-3"
+                        >
+                            로그인 하기
+                        </button>
                     </div>
                 </div>
                 <!-- // 모달 컨텐츠 -->
